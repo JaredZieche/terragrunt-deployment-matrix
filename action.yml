@@ -1,13 +1,45 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Terragrunt Directory Check'
+description: 'Check a list of changed files to determine where to execute a terragrunt command'
+author: 'Jared Zieche'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  files:
+    description: 'Files to inspect in order to make a decision on deployment'
     required: true
-    default: '1000'
+    default: "['src/terraform/aws/sbx/us-west-1/cluster/eks-cluster/terragrunt.hcl', 'src/terraform/aws/sbx/us-east-1/cluster/eks-cluster/terragrunt.hcl']"
+  base-directory:
+    description: 'The base directory relative to the repo root from which to capture paths'
+    required: true
+    default: 'src/terraform'
+  providers:
+    description: 'Types of cloud providers to capture'
+    required: true
+    default: "aws|azure"
+  environments:
+    description: 'What are the names of the environments to check for'
+    required: true
+    default: "sbx|dev|stage|preprod|prod"
+  regions:
+    description: 'What are the available regions to deploy in'
+    required: true
+    default: "us-west-1|us-east-1"
+  resource_groups:
+    description: 'Regex patterns to match that determines which directories terragrunt can be executed from'
+    required: true
+    default: "cluster|tenured/.*"
 outputs:
-  time: # output will be available to future steps
-    description: 'The current time after waiting'
+  matrix:
+    description: 'The include matrix that will be used to generate jobs.'
+    value: ${{ steps.tg-dir-check.outputs.matrix }}
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - id: tg-dir-check
+      env:
+        FILES: ${{ inputs.files }}
+        BASE_DIRECTORY: ${{ inputs.base-directory }}
+        PROVIDERS: ${{ inputs.providers }}
+        ENVS: ${{ inputs.environements }}
+        REGIONS: ${{ inputs.regions }}
+        RESOURCE_GROUPS: ${{ inputs.resource_groups }}
+      run: ${{ github.action_path }}/main.sh
+      shell: bash
