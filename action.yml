@@ -5,7 +5,7 @@ inputs:
   files:
     description: 'Files to inspect in order to make a decision on deployment'
     required: true
-    default: "['src/terraform/aws/sbx/us-west-1/cluster/eks-cluster/terragrunt.hcl','src/terraform/aws/sbx/us-east-1/cluster/eks-cluster/terragrunt.hcl']"
+    default: "{['src/terraform/aws/sbx/us-west-1/cluster/eks-cluster/terragrunt.hcl','src/terraform/aws/sbx/us-east-1/cluster/eks-cluster/terragrunt.hcl']}"
   base-directory:
     description: 'The base directory relative to the repo root from which to capture paths'
     required: true
@@ -35,7 +35,7 @@ runs:
   steps:
     - id: tg-dir-check
       env:
-        FILES: ${{ inputs.files }}
+        FILES: ${{ fromJson(inputs.files) }}
         BASE_DIRECTORY: ${{ inputs.base-directory }}
         PROVIDERS: ${{ inputs.providers }}
         ENVS: ${{ inputs.environments }}
