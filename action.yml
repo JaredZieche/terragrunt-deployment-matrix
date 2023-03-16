@@ -1,5 +1,7 @@
 name: 'Terragrunt Directory Check'
-description: 'Check a list of changed files to determine where to execute a terragrunt command'
+description: |
+  'Check a list of files to determine where to execute a terragrunt command.'
+  'Useful when attempting to determine what changes will occur as the result of a pull request'
 author: 'Jared Zieche'
 inputs:
   files:

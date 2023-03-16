@@ -30,7 +30,7 @@ function testit() {
 
   export FILES=$(echo "[${joined%,}\"test\"]")
   export BASE_DIRECTORY="src/terraform"
-  export PROVIDERS="aws"
+  export PROVIDERS="aws|azure"
   export ENVS="sbx|dev|stage|prod"
   export REGIONS="us-west-1|us-east-1|us-west-2|us-east-2"
   export RESOURCE_GROUPS="cluster|lambda"
