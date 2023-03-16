@@ -37,7 +37,7 @@ runs:
   steps:
     - id: tg-dir-check
       env:
-        FILES: ${{ fromJson(inputs.files) }}
+        FILES: ${{ inputs.files }}
         BASE_DIRECTORY: ${{ inputs.base-directory }}
         PROVIDERS: ${{ inputs.providers }}
         ENVS: ${{ inputs.environments }}
