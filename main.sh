@@ -24,8 +24,6 @@ function main() {
 
 function testit() {
   files=($(cd examples && find src/terraform -type f))
-  touch /tmp/ghoutput
-  touch /tmp/summary.md
   printf -v joined '"%s", ' "${files[@]}"
 
   export FILES=$(echo "[${joined%,}\"test\"]")
