@@ -12,8 +12,7 @@ envs="${ENVS:=sbx|dev|stage|prod}"
 regions="${REGIONS:=us-gov-west-1|us-gov-east-1}"
 resource_groups="${RESOURCE_GROUPS:=cluster|tenured.*}"
 
-# query="$base_directory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resource_groups)/"
-query="$base_directory/()"
+query="$base_directory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resource_groups)/"
 matrix=$(echo "${FILES}" | jq --arg query "${query}" '{include: map(select(values) | capture($query))|unique}')
 paths=$(echo "${matrix}" | jq --raw-output '.include[] | "| " + .["provider"] + " | " + .["env"] + " | " + .["region"] + " | " + .["resource_group"] + " |"')
 
