@@ -4,11 +4,11 @@ set -o pipefail
 function main() {
   FILES="${FILES}"
 
-  base_directory="${BASE_DIRECTORY:=src/terraform}"
-  providers="${PROVIDERS:=aws}"
-  envs="${ENVS:=sbx}"
-  regions="${REGIONS:=us-west-1|us-east-1}"
-  resource_groups="${RESOURCE_GROUPS:=cluster|tenured.*}"
+  base_directory="${BASE_DIRECTORY}"
+  providers="${PROVIDERS}"
+  envs="${ENVS}"
+  regions="${REGIONS}"
+  resource_groups="${RESOURCE_GROUPS}"
 
   query="$base_directory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resource_groups)/"
   matrix=$(echo "${FILES}" | jq --arg query "${query}" '{include: map(select(values) | capture($query))|unique}')
@@ -29,6 +29,11 @@ function testit() {
   printf -v joined '"%s", ' "${files[@]}"
 
   export FILES=$(echo "[${joined%,}\"test\"]")
+  export BASE_DIRECTORY="src/terraform"
+  export PROVIDERS="aws"
+  export ENVS="sbx|dev|stage|prod"
+  export REGIONS="us-west-1|us-east-1|us-west-2|us-east-2"
+  export RESOURCE_GROUPS="cluster|lambda"
 
   echo $FILES
 }

@@ -1,2 +1,1 @@
-terragrunt.hcl
 config
