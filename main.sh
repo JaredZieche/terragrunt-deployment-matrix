@@ -29,12 +29,8 @@ function testit() {
   printf -v joined '"%s", ' "${files[@]}"
 
   export FILES=$(echo "[${joined%,}\"test\"]")
-  export GITHUB_OUTPUT="/tmp/ghoutput"
-  export GITHUB_STEP_SUMMARY="/tmp/summary.md"
 
   echo $FILES
-  echo "" > $GITHUB_OUTPUT
-  echo "" > $GITHUB_STEP_SUMMARY
 }
 
 if $TEST; then
