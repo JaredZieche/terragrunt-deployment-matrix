@@ -12,21 +12,21 @@ inputs:
   providers:
     description: 'Types of cloud providers to capture'
     required: true
-    default: "aws|azure"
+    default: "aws"
   environments:
     description: 'What are the names of the environments to check for'
     required: true
-    default: "sbx|dev|stage|preprod|prod"
+    default: "sbx"
   regions:
     description: 'What are the available regions to deploy in'
     required: true
-    default: "us-west-1|us-east-1"
+    default: "us-west-1"
   resource_groups:
     description: 'Regex patterns to match that determines which directories terragrunt can be executed from'
     required: true
-    default: "cluster|tenured/.*"
+    default: "cluster"
   test:
-    description: if action should be run as a test only
+    description: Trigger test function to search all files in base_directory and generate files list.
     required: false
 outputs:
   matrix:

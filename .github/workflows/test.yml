@@ -9,8 +9,24 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.test.outputs.matix }}
     steps:
     - uses: actions/checkout@v3
     - uses: ./
+      id: test
       with:
         test: true
+
+  matrix:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.test.outputs.matrix) }}
+    steps:
+      - run: |
+          echo ${{ matrix.provider }} >> $GITHUB_OUTPUT
+          echo ${{ matrix.env }} >> $GITHUB_OUTPUT
+          echo ${{ matrix.region }} >> $GITHUB_OUTPUT
+          echo ${{ matrix.resource_group }} >> $GITHUB_OUTPUT
