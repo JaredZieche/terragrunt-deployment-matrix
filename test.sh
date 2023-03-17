@@ -1,16 +1,16 @@
 #!/bin/bash
 
-files=($(cd examples && find src/terraform -type f))
 touch /tmp/ghoutput
 touch /tmp/summary.md
-printf -v joined '"%s", ' "${files[@]}"
 
-export FILES=$(echo "[${joined%,}\"test\"]")
 export GITHUB_OUTPUT="/tmp/ghoutput"
 export GITHUB_STEP_SUMMARY="/tmp/summary.md"
+export TEST=true
 
-echo $FILES
 echo "" > $GITHUB_OUTPUT
 echo "" > $GITHUB_STEP_SUMMARY
 
 ./main.sh
+
+cat $GITHUB_OUTPUT
+cat $GITHUB_STEP_SUMMARY

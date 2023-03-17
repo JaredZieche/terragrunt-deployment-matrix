@@ -1,8 +1,7 @@
 name: 'Terragrunt Directory Check'
 author: zorg
 description: |
-  'Check files to determine infrastructure deployment.'
-  'Useful when attempting to determine what changes will occur as the result of a pull request.'
+  Check files to determine infrastructure deployment. Useful when attempting to determine what changes will occur as the result of a pull request. Currently modeled after a typical infrastructure layout using [Terragrunt](https://terragrunt.gruntwork.io/) and [Terraform](https://www.terraform.io/). Resulting output is generated in the form of an [include matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#example-expanding-configurations). This matrix can then be passed to a subsequent job using the matrix strategy to generate a job for each environment. Inputs are combined into a jq query and can use [jq regex syntax](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
 inputs:
   files:
     description: 'Files to inspect in order to make a decision on deployment'
@@ -12,7 +11,7 @@ inputs:
     required: true
     default: 'src/terraform'
   providers:
-    description: 'Types of cloud providers to capture'
+    description: 'Types of terraform providers to capture'
     required: true
     default: "aws"
   environments:
