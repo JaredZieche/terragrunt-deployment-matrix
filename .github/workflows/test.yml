@@ -1,24 +1,48 @@
 name: "build"
 on:
   pull_request:
+    types: [opened]
+    branches:
+      - "main"
+    paths-ignore:
+      - "README.md"
+      - "docs/*"
+      - ".git*"
   push:
     branches:
       - main
-      - 'releases/*'
+      - feature/*
+    paths-ignore:
+      - "README.md"
+      - "docs/*"
+      - ".git*"
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.test.outputs.matrix }}
+      default-matrix: ${{ steps.test-defaults.outputs.matrix }}
+      inputs-matrix: ${{ steps.test-inputs.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./
-        id: test
+        id: test-defaults
         with:
+          base-directory: 'examples/src/terraform'
+          test: true
+      - uses: ./
+        id: test-inputs
+        with:
+          base-directory: 'examples/src/terraform'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
+          resource_groups: 'cluster|lambda'
           test: true
 
   matrix:
+    if: github.event_name == 'workflow_dispatch'
     needs: test
     runs-on: ubuntu-latest
     strategy:
