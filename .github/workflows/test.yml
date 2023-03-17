@@ -16,7 +16,7 @@ jobs:
       - uses: ./
         id: test
         with:
-          base_directory: 'src/terraform'
+          base-directory: 'src/terraform'
           providers: 'aws|azure'
           envs: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1'
