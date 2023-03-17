@@ -1,5 +1,5 @@
 name: 'Terragrunt Directory Check'
-author: zorg
+author: 'Jared Zieche'
 description: |
   Check files to determine paths for running infrastructure deployments via Terragrunt.
 inputs:
