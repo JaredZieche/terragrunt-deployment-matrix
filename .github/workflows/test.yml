@@ -35,7 +35,7 @@ jobs:
       - uses: ./
         id: test-inputs
         with:
-          base-directory: 'src/terraform'
+          base-directory: 'examples/src/terraform'
           providers: 'aws|azure'
           environments: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1'
