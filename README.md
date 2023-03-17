@@ -1,3 +1,5 @@
+[![build](https://github.com/JaredZieche/terragrunt-deployment-matrix/actions/workflows/test.yml/badge.svg)](https://github.com/JaredZieche/terragrunt-deployment-matrix/actions/workflows/test.yml)
+
 <!-- action-docs-description -->
 
 ## Description

@@ -1,4 +1,4 @@
-name: "units-test"
+name: "build"
 on:
   pull_request:
   push:
@@ -32,5 +32,3 @@ jobs:
           echo "resource_group=${{ matrix.resource_group }}" >> $GITHUB_OUTPUT
       - run: |
           echo "Planning ${{ format('{0}/{1}/{2}/{3}', matrix.provider, matrix.env, matrix.region, matrix.resource_group) }}" >> $GITHUB_STEP_SUMMARY
-
-
