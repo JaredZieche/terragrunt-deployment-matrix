@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - "main"
+    paths-ignore:
+      - "README.md"
+      - "docs/*"
+      - ".github/**"
+      - ".git*"
+
+jobs:
+  Tagging:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: quick check for acceptable merge branch
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'feature') && !contains(github.event.pull_request.labels.*.name, 'bug') && !contains(github.event.pull_request.labels.*.name, 'hotfix') }}
+        run: |
+              echo "::error ::Your branch you are working out of is not compatible with the automation of tag creation and versioning. Please use an approved branch like feature/, patch/, hotfix/, docs/ or bug/ so that it can get the appropriate label."
+              exit 1
+      - name: minor-tag
+        if: contains(github.event.pull_request.labels.*.name, 'feature')
+        id: tag_version1
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: minor
+          create_annotated_tag: true
+          tag_prefix: "v"
+
+      - name: hotfix-tag
+        if: contains(github.event.pull_request.labels.*.name, 'hotfix') || contains(github.event.pull_request.labels.*.name, 'bug')
+        id: tag_version2
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch
+          create_annotated_tag: true
+          tag_prefix: "v"
+
+      - name: Create a GitHub release for minor bump
+        if: contains(github.event.pull_request.labels.*.name, 'feature')
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version1.outputs.new_tag }}
+          name: Release ${{ steps.tag_version1.outputs.new_tag }}
+          body: ${{ steps.tag_version1.outputs.changelog }}
+
+      - name: Create a GitHub release for patch bump
+        if: contains(github.event.pull_request.labels.*.name, 'hotfix') || contains(github.event.pull_request.labels.*.name, 'bug')
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version2.outputs.new_tag }}
+          name: Release ${{ steps.tag_version2.outputs.new_tag }}
+          body: ${{ steps.tag_version2.outputs.changelog }}
