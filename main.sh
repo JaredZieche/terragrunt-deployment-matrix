@@ -2,14 +2,14 @@
 
 set -o pipefail
 
+base_directory="${BASE_DIRECTORY}"
+providers="${PROVIDERS}"
+envs="${ENVS}"
+regions="${REGIONS}"
+resource_groups="${RESOURCE_GROUPS}"
+
 function main() {
   FILES="${FILES}"
-
-  base_directory="${BASE_DIRECTORY}"
-  providers="${PROVIDERS}"
-  envs="${ENVS}"
-  regions="${REGIONS}"
-  resource_groups="${RESOURCE_GROUPS}"
 
   query="$base_directory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resource_groups)/"
   matrix=$(echo "${FILES}" | jq --arg query "${query}" '{include: map(select(values) | capture($query))|unique}')
@@ -24,7 +24,7 @@ function main() {
 }
 
 function testit() {
-  files=($(cd examples && find src/terraform -type f))
+  files=($(find ${BASE_DIRECTORY} -type f))
   printf -v joined '"%s", ' "${files[@]}"
 
   export FILES=$(echo "[${joined%,}\"test\"]")

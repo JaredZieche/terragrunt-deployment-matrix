@@ -7,7 +7,7 @@ export GITHUB_OUTPUT="/tmp/ghoutput"
 export GITHUB_STEP_SUMMARY="/tmp/summary.md"
 export TEST=true
 
-export BASE_DIRECTORY="src/terraform"
+export BASE_DIRECTORY="examples/src/terraform"
 export PROVIDERS="aws|azure"
 export ENVS="sbx|dev|stage|prod"
 export REGIONS="us-west-1|us-east-1|us-west-2|us-east-2"
