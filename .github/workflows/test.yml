@@ -5,16 +5,22 @@ on:
     branches:
       - main
       - feature/*
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.test.outputs.matrix }}
+      default-matrix: ${{ steps.test-defaults.outputs.matrix }}
+      inputs-matrix: ${{ steps.test-inputs.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./
-        id: test
+        id: test-defaults
+        with:
+          test: true
+      - uses: ./
+        id: test-inputs
         with:
           base-directory: 'src/terraform'
           providers: 'aws|azure'
@@ -24,6 +30,7 @@ jobs:
           test: true
 
   matrix:
+    if: github.event_name == 'workflow_dispatch'
     needs: test
     runs-on: ubuntu-latest
     strategy:
