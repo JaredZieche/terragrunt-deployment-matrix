@@ -14,18 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./
-        id: test-inputs
+        id: test
         with:
-          base-directory: 'examples/src/terraform'
+          base-directory: 'src/terraform'
           providers: 'aws|azure'
           environments: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
-          test: true
-
-      - uses: ./
-        id: test-defaults
-        with:
           test: true
 
   matrix:
