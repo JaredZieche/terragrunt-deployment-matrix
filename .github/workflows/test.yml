@@ -7,7 +7,6 @@ on:
     paths-ignore:
       - "README.md"
       - "docs/*"
-      - ".github/**"
       - ".git*"
   push:
     branches:
@@ -16,7 +15,6 @@ on:
     paths-ignore:
       - "README.md"
       - "docs/*"
-      - ".github/**"
       - ".git*"
   workflow_dispatch:
 
