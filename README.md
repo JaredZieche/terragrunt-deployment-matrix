@@ -8,6 +8,8 @@ Check files to determine infrastructure deployment. Useful when attempting to de
 
 <!-- action-docs-description -->
 
+This action is useful when attempting to determine what changes will occur as the result of a pull request. Currently modeled after a typical infrastructure layout using [Terragrunt](https://terragrunt.gruntwork.io/) and [Terraform](https://www.terraform.io/). Resulting output is generated in the form of an [include matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#example-expanding-configurations). This matrix can then be passed to a subsequent job using the matrix strategy to generate a job for each environment. Inputs are combined into a jq query and can use [jq regex syntax](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
+
 This is written as a composite action mainly out of the need for simplicity and not having to manage package dependencies. That may change in the future. The current limitations of this action reside mainly around the strict ordering of the directories. Right now it expects a repository to be structured as provider/env/region/resource_group.
 
 ## Example Workflow:
