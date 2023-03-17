@@ -43,7 +43,7 @@ jobs:
         with:
           files: ${{ steps.files.outputs.matrix }}
           providers: aws|azure
-          envs: 'sbx|dev|stage|prod'
+          environments: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1|us-central'
           resource_groups: 'cluster|lambdas'
 
