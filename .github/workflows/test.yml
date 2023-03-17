@@ -29,6 +29,7 @@ jobs:
       - uses: ./
         id: test-defaults
         with:
+          base-directory: 'examples/src/terraform'
           test: true
       - uses: ./
         id: test-inputs
