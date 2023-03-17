@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - 'releases/*'
+      - feature/*
 
 jobs:
   test:
@@ -16,6 +16,11 @@ jobs:
       - uses: ./
         id: test
         with:
+          base_directory: 'src/terraform'
+          providers: 'aws|azure'
+          envs: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
+          resource_groups: 'cluster|lambda'
           test: true
 
   matrix:
