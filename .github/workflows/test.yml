@@ -12,11 +12,11 @@ jobs:
     outputs:
       matrix: ${{ steps.test.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: ./
-      id: test
-      with:
-        test: true
+      - uses: actions/checkout@v3
+      - uses: ./
+        id: test
+        with:
+          test: true
 
   matrix:
     needs: test
@@ -31,6 +31,6 @@ jobs:
           echo "region=${{ matrix.region }}" >> $GITHUB_OUTPUT
           echo "resource_group=${{ matrix.resource_group }}" >> $GITHUB_OUTPUT
       - run: |
-          echo "Building ${{ format('{0}/{1}/{2}/{3}', matrix.provider, matrix.env, matrix.region, matrix.resource_group) }}" >> $GITHUB_STEP_SUMMARY
+          echo "Planning ${{ format('{0}/{1}/{2}/{3}', matrix.provider, matrix.env, matrix.region, matrix.resource_group) }}" >> $GITHUB_STEP_SUMMARY
 
 

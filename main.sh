@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -o pipefail
+
 function main() {
   FILES="${FILES}"
 

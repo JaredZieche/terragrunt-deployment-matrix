@@ -1,8 +1,8 @@
 name: 'Terragrunt Directory Check'
+author: zorg
 description: |
-  'Check a list of files to determine where to execute a terragrunt command.'
-  'Useful when attempting to determine what changes will occur as the result of a pull request'
-author: 'Jared Zieche'
+  'Check files to determine infrastructure deployment.'
+  'Useful when attempting to determine what changes will occur as the result of a pull request.'
 inputs:
   files:
     description: 'Files to inspect in order to make a decision on deployment'
@@ -47,3 +47,6 @@ runs:
         RESOURCE_GROUPS: ${{ inputs.resource_groups }}
       run: ${{ github.action_path }}/main.sh
       shell: bash
+branding:
+  icon: 'grid'
+  color: 'green'
