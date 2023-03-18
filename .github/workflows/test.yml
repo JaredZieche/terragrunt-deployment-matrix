@@ -27,23 +27,41 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Test with defaults
+      - name: Get all files
+        id: files
+        run: |
+          files=($(find examples/src/terraform -type f))
+          printf -v joined '"%s", ' "${files[@]}"
+          echo "stringArray=$(echo "[${joined%s,}\"ignore\"]")" >> $GITHUB_OUTPUT
+          echo "jsonArray=$(jq -c --argjson array "${files}" -n '$array')" >> $GITHUB_OUTPUT
+
+      - name: Test with string array and defaults
         uses: ./
-        id: test-defaults
+        id: stringArray
         with:
-          base-directory: 'examples/src/terraform'
-          test: true
+          files: ${{ steps.files.outputs.stringArray }}
+          base_directory: 'examples/src/terraform'
+
+      - name: Test with json array and defaults
+        uses: ./
+        id: jsonArray
+        with:
+          files: ${{ fromJson(steps.files.outputs.jsonArray) }}
+          base_directory: 'examples/src/terraform'
 
       - name: Test with inputs
         uses: ./
-        id: test-inputs
+        id: inputs
         with:
-          base-directory: 'examples/src/terraform'
+          files: ${{ fromJson(steps.files.outputs.jsonArray) }}
+          base_directory: 'examples/src/terraform'
           providers: 'aws|azure'
           environments: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
-          test: true
+          global_files: |
+            - 'examples/src/terraform/aws/terragrunt.hcl'
+            - 'examples/src/terraform/aws/global.hcl'
 
   matrix:
     if: github.event_name == 'workflow_dispatch'

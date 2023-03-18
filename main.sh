@@ -6,7 +6,6 @@ providers="${INPUT_PROVIDERS}"
 envs="${INPUT_ENVIRONMENTS}"
 regions="${INPUT_REGIONS}"
 resourceGroups="${INPUT_RESOURCE_GROUPS}"
-globalFiles=( $(echo $INPUT_GLOBAL_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
 files=( $(echo $INPUT_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
 
 function checkInputs() {
@@ -14,15 +13,20 @@ function checkInputs() {
     echo "${baseDirectory} must exist in your repo!"
     exit 1
   fi
-  if [[ ${#files[@]} -eq 0 ]]; then
-    echo "No files passed to input."
+  if [[ -z ${files} ]]; then
+    echo "Files input cannot be null."
+    exit 1
+  elif [[ ${#files[@]} -eq 0 ]]; then
+    echo "The array passed to files input contained no items."
+    exit 1
   fi
   if [[ ! ${#globalFiles[@]} -eq 0 ]]; then
+    globalFiles=( $(echo $INPUT_GLOBAL_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
     files+=(${globalFiles[@]})
     dupes=($(echo "${files[@]}" | tr ' ' "\n" | sort | uniq -d))
 
     if [ ! "${#dupes[@]}" -eq 0 ]; then
-      echo "${#dupes[@]} Global files have been changed! All resource groups could be impacted."
+      echo "::warning ${#dupes[@]} Global files have been changed! All resource groups could be impacted."
       globalChange
     fi
   fi
@@ -50,5 +54,6 @@ function globalChange() {
 
   export FILES=$(echo "[${joined%s,}\"ignore\"]")
 }
+if [[ $TEST ]]; then
 
 main
