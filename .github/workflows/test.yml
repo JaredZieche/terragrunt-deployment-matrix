@@ -33,7 +33,7 @@ jobs:
           files=($(find examples/src/terraform -type f))
           printf -v joined '"%s", ' "${files[@]}"
           echo "stringArray=$(echo "[${joined%s,}\"ignore\"]")" >> $GITHUB_OUTPUT
-          echo "jsonArray=$(jq -c --argjson array "${files}" -n '$array')" >> $GITHUB_OUTPUT
+          echo "jsonArray=$(jq -c --argjson array ${files[@]} -n '$array')" >> $GITHUB_OUTPUT
 
       - name: Test with string array and defaults
         uses: ./
