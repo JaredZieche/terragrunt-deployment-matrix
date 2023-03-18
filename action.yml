@@ -22,10 +22,13 @@ inputs:
     description: 'What are the available regions to deploy in'
     required: true
     default: "us-west-1"
-  resource_groups:
+  resource-groups:
     description: 'Regex patterns to match that determines which directories terragrunt can be executed from'
     required: true
     default: "cluster"
+  global-files:
+    description: 'List of paths to files that effect all environments'
+    required: false
   test:
     description: Trigger test function to search all files in base_directory and generate files list.
     required: false
@@ -43,7 +46,8 @@ runs:
         PROVIDERS: ${{ inputs.providers }}
         ENVS: ${{ inputs.environments }}
         REGIONS: ${{ inputs.regions }}
-        RESOURCE_GROUPS: ${{ inputs.resource_groups }}
+        RESOURCE_GROUPS: ${{ inputs.resource-groups }}
+        GLOBAL_FILES: ${{ inputs.global-files }}
       run: ${{ github.action_path }}/main.sh
       shell: bash
 branding:

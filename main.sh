@@ -1,18 +1,39 @@
 #!/bin/bash
-
 set -o pipefail
 
-base_directory="${BASE_DIRECTORY}"
-providers="${PROVIDERS}"
-envs="${ENVS}"
-regions="${REGIONS}"
-resource_groups="${RESOURCE_GROUPS}"
+baseDirectory="${INPUT_BASE_DIRECTORY}"
+providers="${INPUT_PROVIDERS}"
+envs="${INPUT_ENVIRONMENTS}"
+regions="${INPUT_REGIONS}"
+resourceGroups="${INPUT_RESOURCE_GROUPS}"
+globalFiles=( $(echo $INPUT_GLOBAL_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
+files=( $(echo $INPUT_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
+
+function checkInputs() {
+  if [[ ! -d ${baseDirectory} ]]; then
+    echo "${baseDirectory} must exist in your repo!"
+    exit 1
+  fi
+  if [[ ${#files[@]} -eq 0 ]]; then
+    echo "No files passed to input."
+  fi
+  if [[ ! ${#globalFiles[@]} -eq 0 ]]; then
+    files+=(${globalFiles[@]})
+    dupes=($(echo "${files[@]}" | tr ' ' "\n" | sort | uniq -d))
+
+    if [ ! "${#dupes[@]}" -eq 0 ]; then
+      echo "${#dupes[@]} Global files have been changed! All resource groups could be impacted."
+      globalChange
+    fi
+  fi
+}
 
 function main() {
-  FILES="${FILES}"
+  checkInputs
+  files="${FILES}"
 
-  query="$base_directory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resource_groups)/"
-  matrix=$(echo "${FILES}" | jq --arg query "${query}" '{include: map(select(values) | capture($query))|unique}')
+  query="$baseDirectory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resourceGroups)/"
+  matrix=$(echo "${files}" | jq --arg query "${query}" '{include: map(select(values) | capture($query))|unique}')
   paths=$(echo "${matrix}" | jq --raw-output '.include[] | "| " + .["provider"] + " | " + .["env"] + " | " + .["region"] + " | " + .["resource_group"] + " |"')
 
   echo ${matrix}
@@ -23,19 +44,11 @@ function main() {
   echo "${paths}" >> $GITHUB_STEP_SUMMARY
 }
 
-function testit() {
-  files=($(find ${BASE_DIRECTORY} -type f))
+function globalChange() {
+  files=($(find ${baseDirectory} -type f))
   printf -v joined '"%s", ' "${files[@]}"
 
-  export FILES=$(echo "[${joined%,}\"test\"]")
-
-  echo $FILES
+  export FILES=$(echo "[${joined%s,}\"ignore\"]")
 }
 
-if $TEST; then
-  testit
-  main
-else
-  main
-fi
-
+main
