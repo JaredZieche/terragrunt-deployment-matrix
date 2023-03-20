@@ -53,7 +53,7 @@ jobs:
           environments: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
-          global_files: '["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
+          global_files: '["src/terraform/aws/terragrunt.hcl", "src/terraform/aws/global.hcl"]'
 
       - name: Test no files change
         continue-on-error: true
@@ -78,8 +78,8 @@ jobs:
           regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
           global_files: |
-            "examples/src/terraform/aws/terragrunt.hcl"
-            "examples/src/terraform/aws/global.hcl"
+            "src/terraform/aws/terragrunt.hcl"
+            "src/terraform/aws/global.hcl"
 
   matrix:
     if: github.event_name == 'workflow_dispatch'
