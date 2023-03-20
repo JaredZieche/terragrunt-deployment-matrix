@@ -67,6 +67,18 @@ jobs:
           regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
 
+      - name: Test list no values
+        continue-on-error: true
+        uses: ./
+        id: no-list-values
+        with:
+          files: "[]"
+          base_directory: 'src/terraform'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
+          resource_groups: 'cluster|lambda'
+
       - name: Test with multi-line inputs
         uses: ./
         id: multi-line-inputs
