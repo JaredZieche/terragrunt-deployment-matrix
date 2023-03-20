@@ -45,7 +45,7 @@ jobs:
 
       - name: Test global change
         uses: ./
-        id: inputs
+        id: global-inputs
         with:
           files: ${{ steps.files.outputs.inputFiles }}
           base_directory: 'src/terraform'
@@ -56,8 +56,9 @@ jobs:
           global_files: '["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
 
       - name: Test no files change
+        continue-on-error: true
         uses: ./
-        id: inputs
+        id: no-inputs
         with:
           files: ""
           base_directory: 'src/terraform'
