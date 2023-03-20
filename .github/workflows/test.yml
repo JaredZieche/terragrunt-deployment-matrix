@@ -34,6 +34,8 @@ jobs:
           printf -v joined '"%s", ' $(cat examples/standard.txt)
           files=$(echo "[${joined%s,}\"ignore\"]")
           echo "inputFiles=$(echo ${files[@]} | jq -c)" >> $GITHUB_OUTPUT
+          dirname $(cat examples/standard.txt) | xargs mkdir -p
+          for file in $(cat examples/standard.txt); do touch $file; done
 
       - name: Test with files and defaults
         uses: ./
