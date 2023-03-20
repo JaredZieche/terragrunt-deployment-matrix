@@ -87,44 +87,36 @@ jobs:
 ```
 
 <!-- action-docs-description -->
-
 ## Description
 
 Check files to determine paths for running infrastructure deployments via Terragrunt.
-
 <!-- action-docs-description -->
 
 <!-- action-docs-inputs -->
-
 ## Inputs
 
-| parameter       | description                                                                                                              | required                                | default       |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | ------------- | --- |
-| files           | Files to inspect in order to make a decision on deployment. ulti-line input using                                        | , or string ["item1", "item2"] formats. | `true`        |     |
-| base-directory  | Deprecated                                                                                                               | `true`                                  | src/terraform |
-| base_directory  | The base directory relative to the repo root from which to capture paths                                                 | `true`                                  | src/terraform |
-| providers       | Types of terraform providers to capture                                                                                  | `true`                                  | aws           |
-| environments    | What are the names of the environments to check for                                                                      | `true`                                  | sbx           |
-| regions         | What are the available regions to deploy in                                                                              | `true`                                  | us-west-1     |
-| resource_groups | Regex patterns to match that determines which directories terragrunt can be executed from                                | `true`                                  | cluster       |
-| global_files    | List of paths to files that effect all environments. Can be written as ["item1", "item2"] or as a multi-line input using |                                         | `false`       |     |
-
+| parameter | description | required | default |
+| --- | --- | --- | --- |
+| files | Files to inspect in order to make a decision on deployment. ulti-line input, or string ["item1", "item2"] formats. | `true` |  |
+| base-directory | The base directory relative to the repo root from which to capture paths | `true` | src/terraform |
+| base_directory | The base directory relative to the repo root from which to capture paths | `true` | src/terraform |
+| providers | Types of terraform providers to capture | `true` | aws |
+| environments | What are the names of the environments to check for | `true` | sbx |
+| regions | What are the available regions to deploy in | `true` | us-west-1 |
+| resource_groups | Regex patterns to match that determines which directories terragrunt can be executed from | `true` | cluster |
+| global_files | List of paths to files that effect all environments. Can be written as ["item1", "item2"] or as a multi-line input using | `false` |  |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
-
 ## Outputs
 
-| parameter | description                                                                     |
-| --------- | ------------------------------------------------------------------------------- |
-| matrix    | JSON formatted string for an include matrix that will be used to generate jobs. |
-
+| parameter | description |
+| --- | --- |
+| matrix | JSON formatted string for an include matrix that will be used to generate jobs. |
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
-
 ## Runs
 
 This action is a `docker` action.
-
 <!-- action-docs-runs -->

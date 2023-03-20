@@ -4,7 +4,7 @@ description: |
   Check files to determine paths for running infrastructure deployments via Terragrunt.
 inputs:
   files:
-    description: 'Files to inspect in order to make a decision on deployment. ulti-line input using |, or string ["item1", "item2"] formats.'
+    description: 'Files to inspect in order to make a decision on deployment. ulti-line input, or string ["item1", "item2"] formats.'
     required: true
   base-directory:
     description: 'The base directory relative to the repo root from which to capture paths'
@@ -32,7 +32,7 @@ inputs:
     required: true
     default: "cluster"
   global_files:
-    description: 'List of paths to files that effect all environments. Can be written as ["item1", "item2"] or as a multi-line input using |'
+    description: 'List of paths to files that effect all environments. Can be written as ["item1", "item2"] or as a multi-line input using'
     required: false
 outputs:
   matrix:
