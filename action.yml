@@ -32,7 +32,6 @@ inputs:
 outputs:
   matrix:
     description: 'The include matrix that will be used to generate jobs.'
-    value: ${{ steps.tg-dir-check.outputs.matrix }}
 runs:
   using: 'docker'
   image: './Dockerfile'

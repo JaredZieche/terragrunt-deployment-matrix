@@ -34,7 +34,7 @@ function checkInputs() {
 
 function main() {
   checkInputs
-  files="${FILES}"
+  files="${INPUT_FILES}"
 
   query="$baseDirectory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resourceGroups)/"
   matrix=$(echo "${files}" | jq --arg query "${query}" '{include: map(select(values) | capture($query))|unique}')
@@ -52,7 +52,7 @@ function globalChange() {
   files=($(find ${baseDirectory} -type f))
   printf -v joined '"%s", ' "${files[@]}"
 
-  export FILES=$(echo "[${joined%s,}\"ignore\"]")
+  export INPUT_FILES=$(echo "[${joined%s,}\"ignore\"]")
 }
 
 main
