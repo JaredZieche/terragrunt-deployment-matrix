@@ -57,7 +57,7 @@ jobs:
 
       - name: Test with multi-line inputs
         uses: ./
-        id: inputs
+        id: multi-line-inputs
         with:
           files: ${{ steps.files.outputs.inputFiles }}
           base_directory: 'src/terraform'
