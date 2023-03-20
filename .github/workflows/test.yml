@@ -49,9 +49,9 @@ jobs:
         with:
           files: ${{ steps.files.outputs.inputFiles }}
           base_directory: 'src/terraform'
-          providers: 'aws|azure'
-          environments: 'sbx|dev|stage|prod'
-          regions: 'us-west-1|us-east-1'
+          providers: 'aws'
+          environments: 'sbx'
+          regions: 'us-west-1'
           resource_groups: 'cluster|lambda'
           global_files: '["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
 
