@@ -25,7 +25,7 @@ jobs:
       - name: minor-tag
         if: contains(github.event.pull_request.labels.*.name, 'feature')
         id: tag_version1
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: minor
@@ -35,7 +35,7 @@ jobs:
       - name: hotfix-tag
         if: contains(github.event.pull_request.labels.*.name, 'hotfix') || contains(github.event.pull_request.labels.*.name, 'bug')
         id: tag_version2
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: patch
