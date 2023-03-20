@@ -26,20 +26,72 @@ jobs:
       inputs-matrix: ${{ steps.test-inputs.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
-      - uses: ./
-        id: test-defaults
+
+      - name: Get all files
+        id: files
+        shell: bash
+        run: |
+          printf -v joined '"%s", ' $(cat examples/standard.txt)
+          files=$(echo "[${joined%s,}\"ignore\"]")
+          echo "inputFiles=$(echo ${files[@]} | jq -c)" >> $GITHUB_OUTPUT
+          dirname $(cat examples/standard.txt) | xargs mkdir -p
+          for file in $(cat examples/standard.txt); do touch $file; done
+
+      - name: Test with files and defaults
+        uses: ./
+        id: defaults
         with:
-          base-directory: 'examples/src/terraform'
-          test: true
-      - uses: ./
-        id: test-inputs
+          files: ${{ steps.files.outputs.inputFiles }}
+
+      - name: Test global change
+        uses: ./
+        id: global-inputs
         with:
-          base-directory: 'examples/src/terraform'
+          files: '["src/terraform/aws/sbx/us-west-1/cluster/eks/terragrunt.hcl", "src/terraform/aws/global.hcl"]'
+          base_directory: 'src/terraform'
           providers: 'aws|azure'
           environments: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
-          test: true
+          global_files: '["src/terraform/aws/terragrunt.hcl", "src/terraform/aws/global.hcl"]'
+
+      - name: Test no files change
+        continue-on-error: true
+        uses: ./
+        id: no-inputs
+        with:
+          files: ""
+          base_directory: 'src/terraform'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
+          resource_groups: 'cluster|lambda'
+
+      - name: Test list no values
+        continue-on-error: true
+        uses: ./
+        id: no-list-values
+        with:
+          files: "[]"
+          base_directory: 'src/terraform'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
+          resource_groups: 'cluster|lambda'
+
+      - name: Test with multi-line inputs
+        uses: ./
+        id: multi-line-inputs
+        with:
+          files: ${{ steps.files.outputs.inputFiles }}
+          base_directory: 'src/terraform'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
+          resource_groups: 'cluster|lambda'
+          global_files: |
+            "src/terraform/aws/terragrunt.hcl"
+            "src/terraform/aws/global.hcl"
 
   matrix:
     if: github.event_name == 'workflow_dispatch'

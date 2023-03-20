@@ -4,9 +4,14 @@ description: |
   Check files to determine paths for running infrastructure deployments via Terragrunt.
 inputs:
   files:
-    description: 'Files to inspect in order to make a decision on deployment'
+    description: 'Files to inspect in order to make a decision on deployment. ulti-line input using |, or string ["item1", "item2"] formats.'
     required: true
   base-directory:
+    description: 'The base directory relative to the repo root from which to capture paths'
+    required: true
+    default: 'src/terraform'
+    deprecationMessage: 'This input has been deprecated, please us base_directory.'
+  base_directory:
     description: 'The base directory relative to the repo root from which to capture paths'
     required: true
     default: 'src/terraform'
@@ -26,26 +31,15 @@ inputs:
     description: 'Regex patterns to match that determines which directories terragrunt can be executed from'
     required: true
     default: "cluster"
-  test:
-    description: Trigger test function to search all files in base_directory and generate files list.
+  global_files:
+    description: 'List of paths to files that effect all environments. Can be written as ["item1", "item2"] or as a multi-line input using |'
     required: false
 outputs:
   matrix:
-    description: 'The include matrix that will be used to generate jobs.'
-    value: ${{ steps.tg-dir-check.outputs.matrix }}
+    description: 'JSON formatted string for an include matrix that will be used to generate jobs.'
 runs:
-  using: 'composite'
-  steps:
-    - id: tg-dir-check
-      env:
-        FILES: ${{ inputs.files }}
-        BASE_DIRECTORY: ${{ inputs.base-directory }}
-        PROVIDERS: ${{ inputs.providers }}
-        ENVS: ${{ inputs.environments }}
-        REGIONS: ${{ inputs.regions }}
-        RESOURCE_GROUPS: ${{ inputs.resource_groups }}
-      run: ${{ github.action_path }}/main.sh
-      shell: bash
+  using: 'docker'
+  image: './Dockerfile'
 branding:
   icon: 'grid'
   color: 'green'

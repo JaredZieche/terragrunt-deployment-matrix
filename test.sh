@@ -3,20 +3,17 @@
 touch /tmp/ghoutput
 touch /tmp/summary.md
 
-export GITHUB_OUTPUT="/tmp/ghoutput"
-export GITHUB_STEP_SUMMARY="/tmp/summary.md"
-export TEST=true
+echo 'GITHUB_OUTPUT="/tmp/ghoutput"' >> .env
+echo 'GITHUB_STEP_SUMMARY="/tmp/summary.md"' >> .env
+echo 'INPUT_BASE_DIRECTORY="examples/src/terraform"' >> .env
+echo 'INPUT_PROVIDERS="aws|azure"' >> .env
+echo 'INPUT_ENVIRONMENTS="sbx|dev|stage|prod"' >> .env
+echo 'INPUT_REGIONS="us-west-1|us-east-1|us-west-2|us-east-2"' >> .env
+echo 'INPUT_RESOURCE_GROUPS="cluster|lambda"' >> .env
+echo 'INPUT_GLOBAL_FILES='["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'' >> .env
 
-export BASE_DIRECTORY="examples/src/terraform"
-export PROVIDERS="aws|azure"
-export ENVS="sbx|dev|stage|prod"
-export REGIONS="us-west-1|us-east-1|us-west-2|us-east-2"
-export RESOURCE_GROUPS="cluster|lambda"
+printf -v joined '"%s", ' $(cat examples/standard.txt)
 
-echo "" > $GITHUB_OUTPUT
-echo "" > $GITHUB_STEP_SUMMARY
+echo 'INPUT_FILES=$(echo "[${joined%s,}\"ignore\"]")' >> .env
 
-./main.sh
-
-cat $GITHUB_OUTPUT
-cat $GITHUB_STEP_SUMMARY
+docker run -v src:/src/ --rm -it --platform=linux/arm64 tg-action:latest
