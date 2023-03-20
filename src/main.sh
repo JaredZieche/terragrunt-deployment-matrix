@@ -7,6 +7,7 @@ envs="${INPUT_ENVIRONMENTS}"
 regions="${INPUT_REGIONS}"
 resourceGroups="${INPUT_RESOURCE_GROUPS}"
 files=( $(echo $INPUT_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
+globalFiles=( $(echo $INPUT_GLOBAL_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
 
 function checkInputs() {
   if [[ ! -d ${baseDirectory} ]]; then

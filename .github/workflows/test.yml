@@ -43,7 +43,7 @@ jobs:
         with:
           files: ${{ steps.files.outputs.inputFiles }}
 
-      - name: Test with inputs
+      - name: Test global change
         uses: ./
         id: inputs
         with:
@@ -54,6 +54,17 @@ jobs:
           regions: 'us-west-1'
           resource_groups: 'cluster|lambda'
           global_files: '["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
+
+      - name: Test no files change
+        uses: ./
+        id: inputs
+        with:
+          files: ""
+          base_directory: 'src/terraform'
+          providers: 'aws'
+          environments: 'sbx'
+          regions: 'us-west-1'
+          resource_groups: 'cluster|lambda'
 
       - name: Test with multi-line inputs
         uses: ./
