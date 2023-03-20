@@ -47,11 +47,11 @@ jobs:
         uses: ./
         id: global-inputs
         with:
-          files: ${{ steps.files.outputs.inputFiles }}
+          files: '["src/terraform/aws/sbx/us-west-1/cluster/eks/terragrunt.hcl", "src/terraform/aws/global.hcl"]'
           base_directory: 'src/terraform'
-          providers: 'aws'
-          environments: 'sbx'
-          regions: 'us-west-1'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
           global_files: '["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
 
@@ -62,9 +62,9 @@ jobs:
         with:
           files: ""
           base_directory: 'src/terraform'
-          providers: 'aws'
-          environments: 'sbx'
-          regions: 'us-west-1'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
 
       - name: Test with multi-line inputs

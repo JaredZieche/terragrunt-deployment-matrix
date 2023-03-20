@@ -6,10 +6,10 @@ providers="${INPUT_PROVIDERS}"
 envs="${INPUT_ENVIRONMENTS}"
 regions="${INPUT_REGIONS}"
 resourceGroups="${INPUT_RESOURCE_GROUPS}"
-files=( $(echo $INPUT_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
-globalFiles=( $(echo $INPUT_GLOBAL_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
 
 function checkInputs() {
+  files=( $(echo $INPUT_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
+  globalFiles=( $(echo $INPUT_GLOBAL_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
   if [[ ! -d ${baseDirectory} ]]; then
     echo "::error::${baseDirectory} must exist in your repo!"
     exit 1
@@ -22,7 +22,6 @@ function checkInputs() {
     exit 1
   fi
   if [[ ! ${#globalFiles[@]} -eq 0 ]]; then
-    globalFiles=( $(echo $INPUT_GLOBAL_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
     files+=(${globalFiles[@]})
     dupes=($(echo "${files[@]}" | tr ' ' "\n" | sort | uniq -d))
 
