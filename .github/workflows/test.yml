@@ -55,6 +55,20 @@ jobs:
           resource_groups: 'cluster|lambda'
           global_files: '["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
 
+      - name: Test with multi-line inputs
+        uses: ./
+        id: inputs
+        with:
+          files: ${{ steps.files.outputs.inputFiles }}
+          base_directory: 'src/terraform'
+          providers: 'aws|azure'
+          environments: 'sbx|dev|stage|prod'
+          regions: 'us-west-1|us-east-1'
+          resource_groups: 'cluster|lambda'
+          global_files: |
+            "examples/src/terraform/aws/terragrunt.hcl"
+            "examples/src/terraform/aws/global.hcl"
+
   matrix:
     if: github.event_name == 'workflow_dispatch'
     needs: test
