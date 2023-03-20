@@ -10,14 +10,14 @@ files=( $(echo $INPUT_FILES | sed -e 's/\[//g' -e 's/\]//g' -e 's/\,//g') )
 
 function checkInputs() {
   if [[ ! -d ${baseDirectory} ]]; then
-    echo "${baseDirectory} must exist in your repo!"
+    echo "::error::${baseDirectory} must exist in your repo!"
     exit 1
   fi
   if [[ -z ${files} ]]; then
-    echo "Files input cannot be null."
+    echo "::error::Files input cannot be null."
     exit 1
   elif [[ ${#files[@]} -eq 0 ]]; then
-    echo "The array passed to files input contained no items."
+    echo "::error::The array passed to files input contained no items."
     exit 1
   fi
   if [[ ! ${#globalFiles[@]} -eq 0 ]]; then
@@ -26,7 +26,7 @@ function checkInputs() {
     dupes=($(echo "${files[@]}" | tr ' ' "\n" | sort | uniq -d))
 
     if [ ! "${#dupes[@]}" -eq 0 ]; then
-      echo "::warning ${#dupes[@]} Global files have been changed! All resource groups could be impacted."
+      echo "::warning::${#dupes[@]} Global files have been changed! All resource groups could be impacted."
       globalChange
     fi
   fi
