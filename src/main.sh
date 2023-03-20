@@ -28,15 +28,14 @@ function checkInputs() {
     if [ ! "${#dupes[@]}" -eq 0 ]; then
       echo "::warning::${#dupes[@]} Global files have been changed! All resource groups could be impacted."
       globalChange
-      main
+    else
+      main "${INPUT_FILES}"
     fi
-  else
-    export inputFiles="${INPUT_FILES}"
-    main
   fi
 }
 
 function main() {
+  inputFiles="${1}"
   query="$baseDirectory/(?<provider>$providers)/(?<env>$envs)/(?<region>$regions)/(?<resource_group>$resourceGroups)/"
   matrix=$(echo "${inputFiles}" | jq --arg query "${query}" '{include: map(select(values) | capture($query))|unique}')
   paths=$(echo "${matrix}" | jq --raw-output '.include[] | "| " + .["provider"] + " | " + .["env"] + " | " + .["region"] + " | " + .["resource_group"] + " |"')
@@ -53,7 +52,8 @@ function globalChange() {
   files=($(find ${baseDirectory} -type f))
   printf -v joined '"%s", ' "${files[@]}"
 
-  export inputFiles=$(echo "[${joined%s,}\"ignore\"]")
+  allFiles=$(echo "[${joined%s,}\"ignore\"]")
+  main "${allFiles}"
 }
 
 checkInputs
