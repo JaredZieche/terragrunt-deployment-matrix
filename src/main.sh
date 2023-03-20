@@ -54,6 +54,5 @@ function globalChange() {
 
   export FILES=$(echo "[${joined%s,}\"ignore\"]")
 }
-if [[ $TEST ]]; then
 
 main

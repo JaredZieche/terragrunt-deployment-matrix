@@ -34,19 +34,8 @@ outputs:
     description: 'The include matrix that will be used to generate jobs.'
     value: ${{ steps.tg-dir-check.outputs.matrix }}
 runs:
-  using: 'composite'
-  steps:
-    - id: tg-dir-check
-      env:
-        INPUT_FILES: ${{ inputs.files }}
-        INPUT_BASE_DIRECTORY: ${{ inputs.base_directory }}
-        INPUT_PROVIDERS: ${{ inputs.providers }}
-        INPUT_ENVIRONMENTS: ${{ inputs.environments }}
-        INPUT_REGIONS: ${{ inputs.regions }}
-        INPUT_RESOURCE_GROUPS: ${{ inputs.resource_groups }}
-        INPUT_GLOBAL_FILES: ${{ inputs.global_files }}
-      run: ${{ github.action_path }}/main.sh
-      shell: bash
+  using: 'docker'
+  image: './Dockerfile'
 branding:
   icon: 'grid'
   color: 'green'

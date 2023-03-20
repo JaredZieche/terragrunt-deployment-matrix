@@ -14,15 +14,11 @@ export INPUT_REGIONS="us-west-1|us-east-1|us-west-2|us-east-2"
 export INPUT_RESOURCE_GROUPS="cluster|lambda"
 export INPUT_GLOBAL_FILES='["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
 
-files=($(find ${INPUT_BASE_DIRECTORY} -type f))
-printf -v joined '"%s", ' "${files[@]}"
+printf -v joined '"%s", ' $(cat examples/standard.txt)
 
 export INPUT_FILES=$(echo "[${joined%s,}\"ignore\"]")
 
-echo "" > $GITHUB_OUTPUT
-echo "" > $GITHUB_STEP_SUMMARY
-
-./main.sh
+docker run -v src:/src/ --rm -it --platform=linux/arm64 tg-action:latest
 
 cat $GITHUB_OUTPUT
 cat $GITHUB_STEP_SUMMARY

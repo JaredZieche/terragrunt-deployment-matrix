@@ -29,39 +29,29 @@ jobs:
 
       - name: Get all files
         id: files
+        shell: bash
         run: |
-          files=($(find examples/src/terraform -type f))
-          printf -v joined '"%s", ' "${files[@]}"
-          echo "stringArray=$(echo "[${joined%s,}\"ignore\"]")" >> $GITHUB_OUTPUT
-          echo "jsonArray=$(jq -c --argjson array ${files[@]} -n '$array')" >> $GITHUB_OUTPUT
+          printf -v joined '"%s", ' $(cat examples/standard.txt)
+          files=$(echo "[${joined%s,}\"ignore\"]")
+          echo "inputFiles=$(echo ${files[@]} | jq -c)" >> $GITHUB_OUTPUT
 
-      - name: Test with string array and defaults
+      - name: Test with files and defaults
         uses: ./
-        id: stringArray
+        id: defaults
         with:
-          files: ${{ steps.files.outputs.stringArray }}
-          base_directory: 'examples/src/terraform'
-
-      - name: Test with json array and defaults
-        uses: ./
-        id: jsonArray
-        with:
-          files: ${{ fromJson(steps.files.outputs.jsonArray) }}
-          base_directory: 'examples/src/terraform'
+          files: ${{ steps.files.outputs.inputFiles }}
 
       - name: Test with inputs
         uses: ./
         id: inputs
         with:
-          files: ${{ fromJson(steps.files.outputs.jsonArray) }}
-          base_directory: 'examples/src/terraform'
+          files: ${{ steps.files.outputs.inputFiles }}
+          base_directory: 'src/terraform'
           providers: 'aws|azure'
           environments: 'sbx|dev|stage|prod'
           regions: 'us-west-1|us-east-1'
           resource_groups: 'cluster|lambda'
-          global_files: |
-            - 'examples/src/terraform/aws/terragrunt.hcl'
-            - 'examples/src/terraform/aws/global.hcl'
+          global_files: '["examples/src/terraform/aws/terragrunt.hcl", "examples/src/terraform/aws/global.hcl"]'
 
   matrix:
     if: github.event_name == 'workflow_dispatch'
