@@ -10,7 +10,7 @@ The `global_files` input allows you to define files that may be included by seve
 
 ## Example Workflow:
 
-```
+```yaml
 
 name: "deploy infrastructure"
 on:
